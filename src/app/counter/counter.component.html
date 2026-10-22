@@ -1,0 +1,22 @@
+<section class="counter">
+  <h1>Compteur NgRx</h1>
+
+  <!-- `count$ | async` lit la valeur courante du Store et se met à jour automatiquement -->
+  <p class="value">{{ count$ | async }}</p>
+
+  <p class="parity">
+    @if (isEven$ | async) {
+      Le nombre est pair
+    } @else {
+      Le nombre est impair
+    }
+  </p>
+
+  <!-- Chaque bouton déclenche une méthode qui dispatch une action -->
+  <div class="buttons">
+    <button (click)="onDecrement()">-1</button>
+    <button (click)="onIncrement()">+1</button>
+    <button (click)="onIncrementByFive()">+5</button>
+    <button class="secondary" (click)="onReset()">Reset</button>
+  </div>
+</section>

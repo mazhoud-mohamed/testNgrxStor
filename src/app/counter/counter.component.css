@@ -1,0 +1,44 @@
+.counter {
+  max-width: 320px;
+  margin: 3rem auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+.value {
+  font-size: 4rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.parity {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  background: #3b5bdb;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2f49b0;
+}
+
+button.secondary {
+  background: #868e96;
+}
