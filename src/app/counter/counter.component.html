@@ -1,11 +1,11 @@
 <section class="counter">
   <h1>Compteur NgRx</h1>
 
-  <!-- `count$ | async` lit la valeur courante du Store et se met à jour automatiquement -->
-  <p class="value">{{ count$ | async }}</p>
+  <!-- `count()` lit la valeur courante du signal et se met à jour automatiquement -->
+  <p class="value">{{ count() }}</p>
 
   <p class="parity">
-    @if (isEven$ | async) {
+    @if (isEven()) {
       Le nombre est pair
     } @else {
       Le nombre est impair

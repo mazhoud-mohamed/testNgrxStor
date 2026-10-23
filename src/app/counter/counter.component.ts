@@ -2,21 +2,19 @@
  * ÉTAPE 5 — UTILISER LE STORE DANS UN COMPOSANT
  * ---------------------------------------------
  * Le composant fait seulement 2 choses avec le Store :
- *   - LIRE   : store.select(selector)  => retourne un Observable de la valeur
+ *   - LIRE   : store.selectSignal(selector) => retourne un Signal de la valeur
  *   - ÉCRIRE : store.dispatch(action)  => envoie une action au reducer
  *
  * Flux complet (à retenir) :
  *   Clic bouton -> dispatch(action) -> Reducer -> nouveau State -> Selector -> Template mis à jour
  */
 import { Component, inject } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { decrement, increment, incrementBy, reset } from '../store/counter/counter.actions';
 import { selectCount, selectIsEven } from '../store/counter/counter.selectors';
 
 @Component({
   selector: 'app-counter',
-  imports: [AsyncPipe],
   templateUrl: './counter.component.html',
   styleUrl: './counter.component.css',
 })
@@ -24,11 +22,12 @@ export class CounterComponent {
   // On injecte le Store global fourni par provideStore() dans app.config.ts
   private readonly store = inject(Store);
 
-  // Par convention, le nom d'un Observable se termine par `$`.
-  // `select` observe le state : à chaque changement de `count`, la nouvelle valeur est émise.
-  // Dans le template, le pipe `async` s'abonne/se désabonne automatiquement.
-  count$ = this.store.select(selectCount);
-  isEven$ = this.store.select(selectIsEven);
+  // `selectSignal` transforme un selector en SIGNAL Angular (lecture seule).
+  // Un signal contient toujours une valeur : on la lit en l'appelant comme une fonction,
+  // `count()`, et le template se met à jour tout seul quand le state change.
+  // (Alternative avec Observable : `store.select(selector)` + pipe `async` dans le template.)
+  count = this.store.selectSignal(selectCount);
+  isEven = this.store.selectSignal(selectIsEven);
 
   // Chaque méthode ne fait que dispatcher une action : aucune logique métier ici,
   // elle est dans le reducer.

@@ -1,0 +1,20 @@
+<section class="calculation">
+  <h2>Calcul</h2>
+
+  <p>Compteur : <strong>{{ count() }}</strong></p>
+
+  <!-- Le bouton est désactivé pendant l'appel API (state.loading) -->
+  <button (click)="onCalculate()" [disabled]="loading()">
+    {{ loading() ? 'Chargement...' : 'Calculer' }}
+  </button>
+
+  @if (error()) {
+    <p class="error">Erreur : {{ error() }}</p>
+  }
+
+  <!-- rate() vaut null tant que l'API n'a pas répondu -->
+  @if (rate() !== null) {
+    <p>Taux de change : <strong>{{ rate() }}</strong></p>
+    <p>Résultat ({{ count() }} × {{ rate() }}) : <strong>{{ result() }}</strong></p>
+  }
+</section>
