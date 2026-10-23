@@ -1,0 +1,34 @@
+<section class="users">
+  <h2>Utilisateurs</h2>
+
+  <!-- Les champs sont lus directement via des variables de template (#name, #email) -->
+  <div class="form">
+    <input #name placeholder="Nom" />
+    <input #email placeholder="Email" />
+    <button (click)="onAdd(name.value, email.value); name.value = ''; email.value = ''">
+      Ajouter
+    </button>
+  </div>
+
+  <p class="stats">{{ total() }} utilisateur(s) dont {{ activeUsers().length }} actif(s)</p>
+
+  <ul>
+    @for (user of users(); track user.id) {
+      <li [class.inactive]="!user.active">
+        <span>{{ user.name }} — {{ user.email }}</span>
+        <span class="actions">
+          <button class="secondary" (click)="onToggleActive(user)">
+            {{ user.active ? 'Désactiver' : 'Activer' }}
+          </button>
+          <button class="danger" (click)="onRemove(user.id)">Supprimer</button>
+        </span>
+      </li>
+    } @empty {
+      <li class="empty">Aucun utilisateur</li>
+    }
+  </ul>
+
+  @if (total() > 0) {
+    <button class="danger" (click)="onClear()">Tout supprimer</button>
+  }
+</section>
