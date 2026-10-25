@@ -1,23 +1,41 @@
 /**
- * ACTIONS DES UTILISATEURS
- * ------------------------
- * Même principe que pour le compteur : une action décrit ce qui s'est passé.
- * Le payload contient les données nécessaires au reducer.
+ * ACTIONS DES UTILISATEURS avec createActionGroup
+ * -----------------------------------------------
+ * createActionGroup regroupe plusieurs actions qui ont la MÊME SOURCE. Au lieu d'écrire
+ * '[Users Page]' dans chaque createAction, on le donne une seule fois (`source`).
  *
- * Important : le reducer doit rester pur. On ne génère donc PAS l'id dans le reducer
- * (un id aléatoire serait différent à chaque appel) : le composant le crée et le met dans l'action.
+ * Avant (createAction) :
+ *   export const addUser = createAction('[Users Page] Add User', props<{ user: User }>());
+ *
+ * Maintenant (createActionGroup) : la clé de `events` est le nom de l'événement, et
+ * NgRx génère le créateur d'action en camelCase : 'Add User' -> UsersActions.addUser(...)
+ * Le `type` produit est identique : '[Users Page] Add User'.
+ *
+ * Même principe que d'habitude : le payload contient les données nécessaires au reducer, et
+ * le reducer reste pur. On ne génère donc PAS l'id dans le reducer : le composant le crée.
  */
-import { createAction, props } from '@ngrx/store';
+import { createActionGroup, emptyProps, props } from '@ngrx/store';
 import { User } from './user.model';
 
-export const addUser = createAction('[Users Page] Add User', props<{ user: User }>());
+export const UsersActions = createActionGroup({
+  // La source : d'où viennent ces actions (ici, la page des utilisateurs)
+  source: 'Users Page',
 
-// `changes` = uniquement les propriétés à modifier (ex: { active: false }), pas l'objet entier
-export const updateUser = createAction(
-  '[Users Page] Update User',
-  props<{ id: string; changes: Partial<User> }>()
-);
+  events: {
+    // Événement avec payload : props<...>()
+    'Add User': props<{ user: User }>(),
 
-export const removeUser = createAction('[Users Page] Remove User', props<{ id: string }>());
+    // `changes` = uniquement les propriétés à modifier (ex: { active: false }), pas l'objet entier
+    'Update User': props<{ id: string; changes: Partial<User> }>(),
 
-export const clearUsers = createAction('[Users Page] Clear Users');
+    'Remove User': props<{ id: string }>(),
+
+    // Événement SANS payload : on doit écrire emptyProps() (pas de valeur vide possible ici)
+    'Clear Users': emptyProps(),
+  },
+});
+
+// Utilisation :
+//   store.dispatch(UsersActions.addUser({ user }));
+//   on(UsersActions.addUser, (state, { user }) => ...)
+//   UsersActions.addUser.type  ->  '[Users Page] Add User'

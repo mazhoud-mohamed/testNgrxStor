@@ -14,7 +14,7 @@
 import { EntityState, createEntityAdapter } from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
 import { User } from './user.model';
-import { addUser, clearUsers, removeUser, updateUser } from './users.actions';
+import { UsersActions } from './users.actions';
 
 export const usersFeatureKey = 'users';
 
@@ -34,12 +34,14 @@ export const usersReducer = createReducer(
 
   // Chaque méthode de l'adapter reçoit (données, state) et retourne le NOUVEAU state.
   // Pas de spread à écrire : l'adapter gère l'immutabilité.
-  on(addUser, (state, { user }) => usersAdapter.addOne(user, state)),
+  on(UsersActions.addUser, (state, { user }) => usersAdapter.addOne(user, state)),
 
   // updateOne attend { id, changes } : seules les propriétés de `changes` sont modifiées
-  on(updateUser, (state, { id, changes }) => usersAdapter.updateOne({ id, changes }, state)),
+  on(UsersActions.updateUser, (state, { id, changes }) =>
+    usersAdapter.updateOne({ id, changes }, state)
+  ),
 
-  on(removeUser, (state, { id }) => usersAdapter.removeOne(id, state)),
+  on(UsersActions.removeUser, (state, { id }) => usersAdapter.removeOne(id, state)),
 
-  on(clearUsers, (state) => usersAdapter.removeAll(state))
+  on(UsersActions.clearUsers, (state) => usersAdapter.removeAll(state))
 );

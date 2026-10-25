@@ -5,7 +5,7 @@
 import { Component, inject } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { User } from '../store/users/user.model';
-import { addUser, clearUsers, removeUser, updateUser } from '../store/users/users.actions';
+import { UsersActions } from '../store/users/users.actions';
 import {
   selectActiveUsers,
   selectAllUsers,
@@ -35,18 +35,20 @@ export class UsersComponent {
     }
     // L'id est créé ici (et non dans le reducer) pour que le reducer reste pur
     const user: User = { id: crypto.randomUUID(), name: name.trim(), email: email.trim(), active: true };
-    this.store.dispatch(addUser({ user }));
+    this.store.dispatch(UsersActions.addUser({ user }));
   }
 
   onToggleActive(user: User): void {
-    this.store.dispatch(updateUser({ id: user.id, changes: { active: !user.active } }));
+    this.store.dispatch(
+      UsersActions.updateUser({ id: user.id, changes: { active: !user.active } })
+    );
   }
 
   onRemove(id: string): void {
-    this.store.dispatch(removeUser({ id }));
+    this.store.dispatch(UsersActions.removeUser({ id }));
   }
 
   onClear(): void {
-    this.store.dispatch(clearUsers());
+    this.store.dispatch(UsersActions.clearUsers());
   }
 }

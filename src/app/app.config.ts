@@ -1,7 +1,8 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, isDevMode, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
+import { provideStoreDevtools } from '@ngrx/store-devtools';
 
 import { APP_CONFIG } from './config/app-config.token';
 import { routes } from './app.routes';
@@ -24,6 +25,19 @@ export const appConfig: ApplicationConfig = {
     // ÉTAPE 6 — ENREGISTRER LES EFFECTS RACINE
     // provideEffects() démarre les classes d'effects : elles commencent à écouter les actions.
     provideEffects(CounterEffects, SaveEffects),
+
+    // REDUX DEVTOOLS
+    // Connecte le Store à l'extension navigateur "Redux DevTools" (Chrome / Edge / Firefox).
+    // Elle affiche chaque action dispatchée, le state avant/après (onglet Diff), et permet de
+    // remonter dans le temps (time travel) en cliquant sur une action.
+    // - maxAge     : nombre d'actions gardées en mémoire (les plus anciennes sont supprimées)
+    // - logOnly    : en production, mode lecture seule (pas de time travel, plus léger et plus sûr)
+    // - connectInZone : garde la détection de changements d'Angular cohérente avec les actions
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: !isDevMode(),
+      connectInZone: true,
+    }),
 
     // FOURNIR UNE VALEUR POUR UN TOKEN : { provide: TOKEN, useValue: valeur }
     // Cette valeur remplace celle par défaut (factory) définie dans le token.
