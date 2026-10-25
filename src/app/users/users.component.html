@@ -12,10 +12,24 @@
 
   <p class="stats">{{ total() }} utilisateur(s) dont {{ activeUsers().length }} actif(s)</p>
 
+  <!--
+    <ng-template> = un morceau de HTML RÉUTILISABLE qui n'est PAS affiché tant qu'on ne
+    le demande pas. On l'affiche avec <ng-container *ngTemplateOutlet="...">.
+    - #userInfo     : nom de la référence pour retrouver le template
+    - let-user      : variable du template, alimentée par la clé `$implicit` du contexte
+    - let-label="label" : variable alimentée par la clé `label` du contexte
+  -->
+  <ng-template #userInfo let-user let-label="label">
+    <span>{{ label }}{{ user.name }} — {{ user.email }}</span>
+  </ng-template>
+
   <ul>
     @for (user of users(); track user.id) {
       <li [class.inactive]="!user.active">
-        <span>{{ user.name }} — {{ user.email }}</span>
+        <!-- On affiche le template en lui passant un contexte : { $implicit: user, label: '' } -->
+        <ng-container
+          *ngTemplateOutlet="userInfo; context: { $implicit: user, label: '' }"
+        ></ng-container>
         <span class="actions">
           <button class="secondary" (click)="onToggleActive(user)">
             {{ user.active ? 'Désactiver' : 'Activer' }}
@@ -30,5 +44,40 @@
 
   @if (total() > 0) {
     <button class="danger" (click)="onClear()">Tout supprimer</button>
+  }
+
+  <!-- Le MÊME template réutilisé ailleurs, avec un autre contexte (label différent) -->
+  @if (activeUsers().length > 0) {
+    <h3>Utilisateurs actifs</h3>
+    <ul>
+      @for (user of activeUsers(); track user.id) {
+        <li>
+          <ng-container
+            *ngTemplateOutlet="userInfo; context: { $implicit: user, label: '✔ ' }"
+          ></ng-container>
+        </li>
+      }
+    </ul>
+  }
+
+  <!--
+    @defer = chargement différé. Le contenu (ici <app-users-stats>) n'est téléchargé et
+    affiché que lorsque le "trigger" se produit, ce qui allège le chargement initial.
+    - on interaction(showStats) : se déclenche au clic sur l'élément #showStats
+    - @placeholder : affiché AVANT le déclenchement
+    - @loading     : affiché pendant le téléchargement du code
+    - @error       : affiché si le téléchargement échoue
+    Autres triggers : on viewport, on idle, on timer(2s), on hover, when condition...
+  -->
+  <button #showStats class="secondary">Afficher les statistiques</button>
+
+  @defer (on interaction(showStats)) {
+    <app-users-stats />
+  } @placeholder {
+    <p class="hint">Clique sur le bouton pour charger les statistiques.</p>
+  } @loading (minimum 500ms) {
+    <p class="hint">Chargement...</p>
+  } @error {
+    <p class="hint">Impossible de charger les statistiques.</p>
   }
 </section>

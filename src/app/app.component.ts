@@ -11,6 +11,7 @@ import { save } from './store/save/save.actions';
       <a routerLink="/counter" routerLinkActive="active">Compteur</a>
       <a routerLink="/calculation" routerLinkActive="active">Calcul</a>
       <a routerLink="/users" routerLinkActive="active">Utilisateurs</a>
+      <a routerLink="/signal-store" routerLinkActive="active">SignalStore</a>
     </nav>
 
     <router-outlet />

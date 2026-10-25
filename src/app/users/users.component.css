@@ -64,6 +64,10 @@ button.danger {
   background: #c92a2a;
 }
 
+.hint {
+  color: #888;
+}
+
 .actions {
   display: flex;
   gap: 0.25rem;

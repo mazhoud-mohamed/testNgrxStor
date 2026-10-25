@@ -33,6 +33,14 @@ export const routes: Routes = [
   },
 
   {
+    path: 'signal-store',
+    loadComponent: () =>
+      import('./signal-store/signal-store-counter.component').then(
+        (m) => m.SignalStoreCounterComponent
+      ),
+  },
+
+  {
     path: 'users',
     loadComponent: () => import('./users/users.component').then((m) => m.UsersComponent),
     // State chargé avec la route (aucun effect nécessaire ici)

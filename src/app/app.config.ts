@@ -3,6 +3,7 @@ import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideStore } from '@ngrx/store';
 
+import { APP_CONFIG } from './config/app-config.token';
 import { routes } from './app.routes';
 import { CounterEffects } from './store/counter/counter.effects';
 import { counterFeatureKey, counterReducer } from './store/counter/counter.reducer';
@@ -23,5 +24,10 @@ export const appConfig: ApplicationConfig = {
     // ÉTAPE 6 — ENREGISTRER LES EFFECTS RACINE
     // provideEffects() démarre les classes d'effects : elles commencent à écouter les actions.
     provideEffects(CounterEffects, SaveEffects),
+
+    // FOURNIR UNE VALEUR POUR UN TOKEN : { provide: TOKEN, useValue: valeur }
+    // Cette valeur remplace celle par défaut (factory) définie dans le token.
+    // Essaie de changer defaultRate ou apiDelayMs : la page Calcul s'adapte, sans toucher au service.
+    { provide: APP_CONFIG, useValue: { defaultRate: 1.2, apiDelayMs: 1500 } },
   ],
 };

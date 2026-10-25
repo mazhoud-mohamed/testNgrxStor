@@ -11,9 +11,14 @@ import {
   selectAllUsers,
   selectUsersTotal,
 } from '../store/users/users.selectors';
+import { NgTemplateOutlet } from '@angular/common';
+import { UsersStatsComponent } from './users-stats.component';
 
 @Component({
   selector: 'app-users',
+  // UsersStatsComponent est utilisé dans un bloc @defer : Angular le sépare automatiquement
+  // dans un chunk à part, téléchargé seulement quand le bloc se déclenche.
+  imports: [UsersStatsComponent, NgTemplateOutlet],
   templateUrl: './users.component.html',
   styleUrl: './users.component.css',
 })
